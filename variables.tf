@@ -54,3 +54,8 @@ variable "prefix" {
   description = "The S3 bucket prefix for the AWSLogs"
   default     = ""
 }
+
+variable "bucket" {
+  type        = "string"
+  description = "The S3 bucket name (not recommended legacy support only, you should really allow the module to name your bucket)"
+}

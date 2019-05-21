@@ -31,6 +31,27 @@ data "aws_iam_policy_document" "default" {
   }
 }
 
+data "aws_iam_policy_document" "bucket" {
+  statement {
+    sid = ""
+
+    principals {
+      type        = "AWS"
+      identifiers = ["${data.aws_elb_service_account.default.arn}"]
+    }
+
+    effect = "Allow"
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.bucket}/*",
+    ]
+  }
+}
+
 module "s3_bucket" {
   source                 = "git::https://github.com/cloudposse/terraform-aws-s3-log-storage.git?ref=tags/0.2.0"
   namespace              = "${var.namespace}"
@@ -38,7 +59,7 @@ module "s3_bucket" {
   name                   = "${var.name}"
   region                 = "${var.region}"
   acl                    = "${var.acl}"
-  policy                 = "${data.aws_iam_policy_document.default.json}"
+  policy                 = "${var.bucket == "" ?  data.aws_iam_policy_document.default.json: data.aws_iam_policy_document.bucket.json}"
   force_destroy          = "${var.force_destroy}"
   versioning_enabled     = "true"
   lifecycle_rule_enabled = "false"
