@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "default" {
   }
 }
 
-data "aws_iam_policy_document" "bucket" {
+data "aws_iam_policy_document" "legacy_bucket" {
   statement {
     sid = ""
 
@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "bucket" {
     ]
 
     resources = [
-      "arn:aws:s3:::${var.bucket}/*",
+      "arn:aws:s3:::${var.legacy_bucket}/*",
     ]
   }
 }
@@ -59,7 +59,7 @@ module "s3_bucket" {
   name                   = "${var.name}"
   region                 = "${var.region}"
   acl                    = "${var.acl}"
-  policy                 = "${var.bucket == "" ?  data.aws_iam_policy_document.default.json: data.aws_iam_policy_document.bucket.json}"
+  policy                 = "${var.legacy_bucket == "" ?  data.aws_iam_policy_document.default.json: data.aws_iam_policy_document.legacy_bucket.json}"
   force_destroy          = "${var.force_destroy}"
   versioning_enabled     = "true"
   lifecycle_rule_enabled = "false"
