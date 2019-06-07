@@ -53,10 +53,11 @@ data "aws_iam_policy_document" "legacy_bucket" {
 }
 
 module "s3_bucket" {
-  source                 = "git::https://github.com/GMADLA/terraform-aws-s3-log-storage.git?ref=tags/0.5.0-dev.2"
+  source                 = "git::https://github.com/GMADLA/terraform-aws-s3-log-storage.git?ref=tags/0.5.0-dev.3"
   namespace              = "${var.namespace}"
   stage                  = "${var.stage}"
   name                   = "${var.name}"
+  legacy_bucket          = "${var.legacy_bucket}"
   region                 = "${var.region}"
   acl                    = "${var.acl}"
   policy                 = "${var.legacy_bucket == "" ?  data.aws_iam_policy_document.default.json: data.aws_iam_policy_document.legacy_bucket.json}"
@@ -66,5 +67,4 @@ module "s3_bucket" {
   delimiter              = "${var.delimiter}"
   attributes             = "${var.attributes}"
   tags                   = "${var.tags}"
-  prefix                 = "${var.prefix}"
 }
