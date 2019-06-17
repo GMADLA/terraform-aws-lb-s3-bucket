@@ -31,33 +31,13 @@ data "aws_iam_policy_document" "default" {
   }
 }
 
-data "aws_iam_policy_document" "legacy_bucket" {
-  statement {
-    sid = ""
 
-    principals {
-      type        = "AWS"
-      identifiers = ["${data.aws_elb_service_account.default.arn}"]
-    }
-
-    effect = "Allow"
-
-    actions = [
-      "s3:PutObject",
-    ]
-
-    resources = [
-      "arn:aws:s3:::${var.legacy_bucket}/*",
-    ]
-  }
-}
-
+# We don't create this resource when a bucket already exists (legacy).
 module "s3_bucket" {
-  source                 = "git::https://github.com/GMADLA/terraform-aws-s3-log-storage.git?ref=tags/0.5.0-dev.3"
+  source                 = "git::https://github.com/cloudposse/terraform-aws-s3-log-storage.git?ref=tags/0.2.0"
   namespace              = "${var.namespace}"
   stage                  = "${var.stage}"
   name                   = "${var.name}"
-  legacy_bucket          = "${var.legacy_bucket}"
   region                 = "${var.region}"
   acl                    = "${var.acl}"
   policy                 = "${var.legacy_bucket == "" ?  data.aws_iam_policy_document.default.json: data.aws_iam_policy_document.legacy_bucket.json}"
@@ -67,4 +47,5 @@ module "s3_bucket" {
   delimiter              = "${var.delimiter}"
   attributes             = "${var.attributes}"
   tags                   = "${var.tags}"
+  enabled                = "${var.legacy_bucket == "" ?  "true" : "false"}"
 }
