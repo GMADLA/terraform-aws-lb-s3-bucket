@@ -31,8 +31,10 @@ data "aws_iam_policy_document" "default" {
   }
 }
 
+
+# We don't create this resource when a bucket already exists (legacy).
 module "s3_bucket" {
-  source                 = "git::https://github.com/cloudposse/terraform-aws-s3-log-storage.git?ref=tags/0.2.0"
+  source                 = "git::https://github.com/cloudposse/terraform-aws-s3-log-storage.git?ref=tags/0.3.0"
   namespace              = "${var.namespace}"
   stage                  = "${var.stage}"
   name                   = "${var.name}"
@@ -45,5 +47,5 @@ module "s3_bucket" {
   delimiter              = "${var.delimiter}"
   attributes             = "${var.attributes}"
   tags                   = "${var.tags}"
-  prefix                 = "${var.prefix}"
+  enabled                = "${var.legacy_bucket == "" ?  "true" : "false"}"
 }

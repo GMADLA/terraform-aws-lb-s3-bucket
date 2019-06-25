@@ -54,3 +54,8 @@ variable "prefix" {
   description = "The S3 bucket prefix for the AWSLogs"
   default     = ""
 }
+
+variable "legacy_bucket" {
+  type        = "string"
+  description = "The S3 bucket name (not recommended legacy support only)"
+}

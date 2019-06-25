@@ -13,6 +13,7 @@
 | region | AWS Region for S3 bucket | string | `us-east-1` | no |
 | stage | Stage (e.g. `prod`, `dev`, `staging`) | string | - | yes |
 | tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`) | map | `<map>` | no |
+| legacy_bucket | Bucket name (not recommended legacy support only) | string | `` | no |
 
 ## Outputs
 
